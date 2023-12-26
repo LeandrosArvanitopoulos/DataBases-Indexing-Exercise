@@ -1,4 +1,4 @@
-create table airports ( 
+CREATE TABLE IF NOT EXISTS airports ( 
   id TEXT primary key, 
   ident text, 
   type text, 
@@ -9,9 +9,3 @@ create table airports (
   continent TEXT, 
   iso_country TEXT
 );
-
-LOAD DATA INFILE 'airports.csv'
-INTO TABLE airports
-FIELDS TERMINATED BY ','
-IGNORE 1 ROWS;
-
