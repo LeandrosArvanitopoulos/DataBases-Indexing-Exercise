@@ -52,6 +52,27 @@ def executeQuery(
 
 
 @timeit_wrapper
+def executeQueryWithIndex(
+    cursor,
+    connection,
+    query="""
+        SELECT name, max(latitude_deg), iso_country
+        FROM airports WITH((idx_airports_lat_deg))
+        WHERE continent = 'EU';
+        """,
+):
+    # execute query
+    cursor.execute(query)
+
+    connection.commit()
+    record = cursor.fetchall()
+    if record != [] and record != None:
+        print(f"The result of the {query}\n\tis\n\t", record)
+    else:
+        print(f"For the query {query}")
+
+
+@timeit_wrapper
 def proccess():
     # create database
     connection, cursor = createConnection()
@@ -80,6 +101,7 @@ def proccessWithIndex():
         query="""CREATE INDEX IF NOT EXISTS idx_airports_lat_deg ON airports(latitude_deg);""",
     )
     executeQuery(cursor, connection)
+    executeQuery(cursor, connection, query="""PRAGMA index_list('airports');""")
     print("\n")
 
     # close connection
